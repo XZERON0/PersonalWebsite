@@ -269,25 +269,62 @@ function About() {
   )
 }
 
+// Анимированный красный фон для Projects
+function RedAnimatedBg() {
+  return (
+    <div className="absolute inset-0 z-0 overflow-hidden">
+      {/* Плавающие красные круги */}
+      <div className="absolute top-[10%] left-[15%] w-64 h-64 bg-scarlet-500/30 rounded-full blur-3xl animate-float" />
+      <div className="absolute top-[60%] right-[20%] w-80 h-80 bg-scarlet-600/25 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s', animationDuration: '8s' }} />
+      <div className="absolute bottom-[20%] left-[40%] w-72 h-72 bg-scarlet-400/20 rounded-full blur-3xl animate-float" style={{ animationDelay: '4s', animationDuration: '10s' }} />
+
+      {/* Движущиеся линии */}
+      {Array.from({ length: 8 }).map((_, i) => (
+        <div
+          key={i}
+          className="absolute h-[2px] bg-gradient-to-r from-transparent via-scarlet-500/60 to-transparent"
+          style={{
+            top: `${10 + i * 12}%`,
+            left: '-100%',
+            width: `${40 + Math.random() * 30}%`,
+            animation: `slide-right ${3 + Math.random() * 4}s ease-in-out infinite`,
+            animationDelay: `${i * 0.5}s`
+          }}
+        />
+      ))}
+
+      {/* Пульсирующие точки */}
+      {Array.from({ length: 15 }).map((_, i) => (
+        <div
+          key={`dot-${i}`}
+          className="absolute w-1 h-1 bg-scarlet-400 rounded-full animate-pulse"
+          style={{
+            top: `${Math.random() * 100}%`,
+            left: `${Math.random() * 100}%`,
+            animationDelay: `${Math.random() * 3}s`,
+            animationDuration: `${2 + Math.random() * 2}s`
+          }}
+        />
+      ))}
+
+      {/* Градиентный оверлей */}
+      <div className="absolute inset-0 bg-gradient-to-b from-wine-900/60 via-wine-900/40 to-wine-900/60" />
+    </div>
+  )
+}
+
 function Projects() {
   return (
     <section id="projects" className="relative bg-wine-900 py-28 overflow-hidden">
-      {/* GIF с Резе как фон */}
-      <div className="absolute inset-0 z-0 flex items-center justify-center">
-        <img
-          src="/gif/reze.gif"
-          alt=""
-          className="w-[60%] h-auto object-contain opacity-70"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-wine-900/40 via-transparent to-wine-900/40" />
-      </div>
+      {/* Анимированный красный фон */}
+      <RedAnimatedBg />
 
       {/* Сетка поверх */}
-      <div className="absolute inset-0 z-[5] opacity-30 pointer-events-none"
+      <div className="absolute inset-0 z-[5] opacity-20 pointer-events-none"
         style={{
           backgroundImage: `
-            linear-gradient(rgba(242, 34, 14, 0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(242, 34, 14, 0.1) 1px, transparent 1px)
+            linear-gradient(rgba(242, 34, 14, 0.15) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(242, 34, 14, 0.15) 1px, transparent 1px)
           `,
           backgroundSize: '40px 40px'
         }}
