@@ -154,7 +154,12 @@ function Hero({ art }) {
 function Marquee() {
   const items = [...SKILLS, ...SKILLS]
   return (
-    <div className="overflow-hidden border-y border-scarlet-700/60 bg-wine-900 py-5">
+    <div className="relative overflow-hidden border-y-2 border-scarlet-700/60 bg-wine-900 py-5">
+      {/* Верхняя декоративная граница */}
+      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-scarlet-400 to-transparent" />
+      {/* Нижняя декоративная граница */}
+      <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-scarlet-400 to-transparent" />
+
       <div className="flex w-max animate-marquee gap-10 whitespace-nowrap font-display text-2xl font-medium text-bone/80 hover:[animation-play-state:paused]">
         {items.map((s, i) => (
           <span key={i} className="flex items-center gap-10">{s}<i className="inline-block h-2.5 w-2.5 rotate-45 bg-scarlet-500" /></span>
@@ -174,46 +179,155 @@ function Title({ children, sub }) {
   )
 }
 
+// Анимированный киберпанк декор
+function CyberDecor() {
+  const [lines, setLines] = useState([])
+  useEffect(() => {
+    const generateLines = () => {
+      return Array.from({ length: 12 }, (_, i) => ({
+        id: i,
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        width: Math.random() * 60 + 20,
+        delay: Math.random() * 3,
+        duration: Math.random() * 2 + 2
+      }))
+    }
+    setLines(generateLines())
+  }, [])
+
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-30">
+      {lines.map((line) => (
+        <div
+          key={line.id}
+          className="absolute h-[2px] bg-gradient-to-r from-transparent via-scarlet-400 to-transparent"
+          style={{
+            left: `${line.x}%`,
+            top: `${line.y}%`,
+            width: `${line.width}%`,
+            animation: `glitch-line ${line.duration}s ${line.delay}s ease-in-out infinite`
+          }}
+        />
+      ))}
+    </div>
+  )
+}
+
 function About() {
   const ref = useReveal()
   return (
-    <section id="about" className="mx-auto max-w-6xl px-6 py-28">
-      <div ref={ref} className="reveal grid items-center gap-14 md:grid-cols-[5fr_6fr]">
+    <section id="about" className="relative mx-auto max-w-6xl px-6 py-28 overflow-hidden">
+      {/* Верхняя граница секции */}
+      <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-transparent via-scarlet-500 to-transparent opacity-60" />
+
+      {/* Киберпанк декор */}
+      <CyberDecor />
+      <div className="absolute top-10 right-10 w-64 h-64 bg-scarlet-500/5 rounded-full blur-3xl animate-pulse" />
+      <div className="absolute bottom-10 left-10 w-80 h-80 bg-scarlet-600/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+
+      <div ref={ref} className="reveal grid items-center gap-14 md:grid-cols-[5fr_6fr] relative z-10">
         <Tilt max={8} className="group relative">
           <div className="absolute -inset-3 -z-10 rotate-2 rounded-3xl bg-scarlet-500 opacity-70 blur-xl animate-glow" />
+          {/* Анимированная рамка */}
+          <div className="absolute -inset-1 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+            <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-scarlet-400 to-transparent animate-shimmer" style={{ backgroundSize: '200% 100%' }} />
+            <div className="absolute inset-x-0 bottom-0 h-[2px] bg-gradient-to-r from-transparent via-scarlet-400 to-transparent animate-shimmer" style={{ backgroundSize: '200% 100%', animationDelay: '1s' }} />
+            <div className="absolute inset-y-0 left-0 w-[2px] bg-gradient-to-b from-transparent via-scarlet-400 to-transparent animate-shimmer" style={{ backgroundSize: '100% 200%', animationDelay: '0.5s' }} />
+            <div className="absolute inset-y-0 right-0 w-[2px] bg-gradient-to-b from-transparent via-scarlet-400 to-transparent animate-shimmer" style={{ backgroundSize: '100% 200%', animationDelay: '1.5s' }} />
+          </div>
           <img src="/art/white.webp" alt="Девушка с белыми волосами и татуировками на красном фоне" loading="lazy"
-            className="aspect-[4/5] w-full rounded-3xl object-cover object-[62%_center]" />
+            className="aspect-[4/5] w-full rounded-3xl object-cover object-[62%_center] relative z-10" />
         </Tilt>
         <div>
-          <h2 className="font-display text-4xl font-extrabold md:text-6xl">Немного <span className="outline-text">обо мне</span></h2>
+          <h2 className="font-display text-4xl font-extrabold md:text-6xl relative">
+            Немного <span className="outline-text">обо мне</span>
+            {/* Глитч декор на заголовке */}
+            <span className="absolute -right-8 -top-4 text-scarlet-500 opacity-20 animate-pulse text-6xl font-mono">&gt;&gt;</span>
+          </h2>
           <div className="mt-8 space-y-5 text-lg leading-relaxed text-bone/80">
-            {PROFILE.about.map((p) => <p key={p}>{p}</p>)}
+            {PROFILE.about.map((p, i) => (
+              <p key={p} className="relative pl-4 border-l-2 border-scarlet-500/30 hover:border-scarlet-500 transition-colors duration-300">
+                <span className="absolute -left-[5px] top-0 w-2 h-2 bg-scarlet-500 rounded-full animate-pulse" style={{ animationDelay: `${i * 0.3}s` }} />
+                {p}
+              </p>
+            ))}
           </div>
           <ul className="mt-8 flex flex-wrap gap-3">
-            {PROFILE.facts.map((f) => (
-              <li key={f} className="rounded-full border border-scarlet-500/60 bg-scarlet-900/50 px-4 py-2 text-sm text-bone">{f}</li>
+            {PROFILE.facts.map((f, i) => (
+              <li key={f} className="rounded-full border border-scarlet-500/60 bg-scarlet-900/50 px-4 py-2 text-sm text-bone hover:bg-scarlet-500/30 hover:border-scarlet-400 transition-all duration-300 hover:-translate-y-1 cursor-default" style={{ animationDelay: `${i * 0.1}s` }}>
+                <span className="inline-block mr-1.5 text-scarlet-400">▸</span>{f}
+              </li>
             ))}
           </ul>
         </div>
       </div>
+
+      {/* Нижняя граница секции */}
+      <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-gradient-to-r from-transparent via-scarlet-500 to-transparent opacity-60" />
     </section>
   )
 }
 
 function Projects() {
   return (
-    <section id="projects" className="bg-wine-900 py-28">
-      <div className="mx-auto max-w-6xl px-6">
+    <section id="projects" className="relative bg-wine-900 py-28 overflow-hidden">
+      {/* GIF с Резе как фон */}
+      <div className="absolute inset-0 z-0 flex items-center justify-center">
+        <img
+          src="/gif/reze.gif"
+          alt=""
+          className="w-[60%] h-auto object-contain opacity-70"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-wine-900/40 via-transparent to-wine-900/40" />
+      </div>
+
+      {/* Сетка поверх */}
+      <div className="absolute inset-0 z-[5] opacity-30 pointer-events-none"
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(242, 34, 14, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(242, 34, 14, 0.1) 1px, transparent 1px)
+          `,
+          backgroundSize: '40px 40px'
+        }}
+      />
+
+      {/* Верхняя граница */}
+      <div className="absolute top-0 left-0 right-0 z-10">
+        <div className="h-1 bg-gradient-to-r from-transparent via-scarlet-500 to-transparent" />
+        <div className="h-[2px] bg-scarlet-500/60" />
+        <div className="h-8 bg-gradient-to-b from-scarlet-500/20 to-transparent" />
+      </div>
+
+      {/* Нижняя граница */}
+      <div className="absolute bottom-0 left-0 right-0 z-10">
+        <div className="h-8 bg-gradient-to-t from-scarlet-500/20 to-transparent" />
+        <div className="h-[2px] bg-scarlet-500/60" />
+        <div className="h-1 bg-gradient-to-r from-transparent via-scarlet-500 to-transparent" />
+      </div>
+
+      {/* Боковые акценты */}
+      <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-gradient-to-b from-transparent via-scarlet-500/40 to-transparent z-10" />
+      <div className="absolute right-0 top-0 bottom-0 w-[2px] bg-gradient-to-b from-transparent via-scarlet-500/40 to-transparent z-10" />
+
+      {/* Анимированные частицы по краям */}
+      <div className="absolute top-0 left-1/4 w-2 h-2 bg-scarlet-400 rounded-full animate-pulse z-10" />
+      <div className="absolute top-0 right-1/3 w-2 h-2 bg-scarlet-400 rounded-full animate-pulse z-10" style={{ animationDelay: '0.5s' }} />
+      <div className="absolute bottom-0 left-1/3 w-2 h-2 bg-scarlet-400 rounded-full animate-pulse z-10" style={{ animationDelay: '1s' }} />
+      <div className="absolute bottom-0 right-1/4 w-2 h-2 bg-scarlet-400 rounded-full animate-pulse z-10" style={{ animationDelay: '1.5s' }} />
+
+      <div className="mx-auto max-w-6xl px-6 relative z-20">
         <Title sub="Всё, что я делаю для себя и в портфолио. Наведи на карточку.">Проекты</Title>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {PROJECTS.map((p) => (
             <Tilt key={p.title}>
-              <a href={p.href} className="relative flex h-full flex-col overflow-hidden rounded-2xl border border-scarlet-700/70 bg-wine-800 p-7 transition-colors hover:border-scarlet-400">
+              <a href={p.href} className="relative flex h-full flex-col overflow-hidden rounded-2xl border border-scarlet-700/70 bg-wine-800/90 backdrop-blur-sm p-7 transition-colors hover:border-scarlet-400">
                 <span className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 hover:opacity-100"
                   style={{ background: 'radial-gradient(260px circle at var(--gx,50%) var(--gy,50%), rgb(var(--s500) / .28), transparent 70%)' }} />
-                <h3 className="font-display text-xl font-medium">{p.title}</h3>
-                <p className="mt-3 flex-1 leading-relaxed text-bone/70">{p.text}</p>
-                <div className="mt-6 flex flex-wrap gap-2">
+                <h3 className="relative font-display text-xl font-medium">{p.title}</h3>
+                <p className="relative mt-3 flex-1 leading-relaxed text-bone/70">{p.text}</p>
+                <div className="relative mt-6 flex flex-wrap gap-2">
                   {p.tags.map((t) => <span key={t} className="rounded-md bg-scarlet-600/25 px-2.5 py-1 text-xs text-scarlet-300">{t}</span>)}
                 </div>
               </a>
@@ -233,8 +347,15 @@ function Gallery({ active, onApply }) {
     return () => window.removeEventListener('keydown', k)
   }, [])
   return (
-    <section id="art" className="py-28">
-      <div className="mx-auto max-w-6xl px-6"><Title sub="Арты, из которых растёт стиль этой страницы. Листай вбок, кликай, чтобы открыть.">Атмосфера</Title></div>
+    <section id="art" className="relative py-28">
+      {/* Верхняя граница */}
+      <div className="absolute top-0 left-0 right-0 z-10">
+        <div className="h-1 bg-gradient-to-r from-transparent via-scarlet-500 to-transparent" />
+        <div className="h-[2px] bg-scarlet-500/60" />
+        <div className="h-6 bg-gradient-to-b from-scarlet-500/20 to-transparent" />
+      </div>
+
+      <div className="mx-auto max-w-6xl px-6 relative z-10"><Title sub="Арты, из которых растёт стиль этой страницы. Листай вбок, кликай, чтобы открыть.">Атмосфера</Title></div>
       <div className="no-scrollbar flex snap-x snap-mandatory gap-5 overflow-x-auto px-6 pb-4 md:px-[max(1.5rem,calc((100vw-72rem)/2+1.5rem))]">
         {ART.map((a, i) => (
           <button key={a.src} onClick={() => setOpen(a)} aria-label={`Открыть: ${a.alt}`}
@@ -262,7 +383,10 @@ function Gallery({ active, onApply }) {
 
 function TerminalSection() {
   return (
-    <section id="terminal" className="mx-auto max-w-4xl px-6 pb-28">
+    <section id="terminal" className="relative mx-auto max-w-4xl px-6 pb-28">
+      {/* Верхняя граница */}
+      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-scarlet-500/50 to-transparent" />
+
       <Title sub="Да, он рабочий. Жми кнопки или печатай команды сам.">Терминал</Title>
       <Terminal />
     </section>
@@ -290,13 +414,29 @@ function Contact() {
 export default function App() {
   const [ready, setReady] = useState(false)
   const [toast, setToast] = useState(false)
+  const [autoPlay, setAutoPlay] = useState(false)
   const [art, setArt] = useState(() => {
     try { return ART.find((a) => a.src === localStorage.getItem('art')) || ART[0] } catch { return ART[0] }
   })
+
   useEffect(() => {
     applyAccent(art.src)
     try { localStorage.setItem('art', art.src) } catch {}
   }, [art])
+
+  // Автоматическая смена артов каждые 8 секунд
+  useEffect(() => {
+    if (!autoPlay) return
+    const interval = setInterval(() => {
+      setArt((current) => {
+        const currentIndex = ART.findIndex((a) => a.src === current.src)
+        const nextIndex = (currentIndex + 1) % ART.length
+        return ART[nextIndex]
+      })
+    }, 8000)
+    return () => clearInterval(interval)
+  }, [autoPlay])
+
   const apply = (a) => {
     setArt(a); setToast(true); scrollTo({ top: 0, behavior: 'smooth' }); setTimeout(() => setToast(false), 2600)
   }
@@ -307,6 +447,14 @@ export default function App() {
       <Chrome />
       {ready && <Nav />}
       {ready && <Hero art={art} />}
+      {/* Кнопка управления автосменой артов */}
+      <button
+        onClick={() => setAutoPlay(!autoPlay)}
+        className="fixed right-6 top-20 z-50 rounded-full bg-wine-950/80 backdrop-blur-sm px-4 py-2 text-sm font-medium text-bone border border-scarlet-500/40 hover:bg-scarlet-500 hover:border-scarlet-400 transition-all duration-300 hover:shadow-lg hover:shadow-scarlet-500/30"
+        title={autoPlay ? "Остановить автосмену" : "Запустить автосмену"}
+      >
+        {autoPlay ? '⏸ Пауза' : '▶ Авто'}
+      </button>
       <Marquee />
       <About />
       <Projects />
