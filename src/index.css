@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { --s300: 255 138 112; --s400: 255 90 60; --s500: 242 34 14; --s600: 201 21 10; --s700: 143 13 8; --s900: 58 7 9; }
+html { scroll-behavior: smooth; }
+.bg-scarlet-500 { transition: background-color .9s ease; }
+body { @apply bg-wine-950 text-bone font-sans antialiased; }
+::selection { background: rgb(var(--s500)); color: #fff; }
+:focus-visible { outline: 2px solid rgb(var(--s400)); outline-offset: 3px; }
+
+/* контурный текст */
+.outline-text { -webkit-text-stroke: 2px #fbe9e4; color: transparent; }
+
+/* появление при скролле (только у заголовков и блока «обо мне») */
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity .8s ease, transform .8s cubic-bezier(.2,.8,.2,1); }
+.reveal.in { opacity: 1; transform: none; }
+
+/* глитч-эффект на имени — срабатывает при наведении */
+.glitch { position: relative; }
+.glitch::before, .glitch::after { content: attr(data-text); position: absolute; inset: 0; opacity: 0; pointer-events: none; }
+.glitch:hover::before { color: #0d0305; opacity: .9; animation: gl 0.35s steps(2) infinite; }
+.glitch:hover::after { color: #fff; opacity: .6; animation: gl 0.35s steps(2) infinite reverse; }
+@keyframes gl { 0% { transform: translate(3px,-2px); clip-path: inset(10% 0 60% 0); } 50% { transform: translate(-4px,2px); clip-path: inset(55% 0 10% 0); } 100% { transform: translate(2px,1px); clip-path: inset(30% 0 35% 0); } }
+
+/* подсветка за курсором (только на устройствах с мышью) */
+.cursor-glow { background: radial-gradient(420px circle at var(--mx,50%) var(--my,50%), rgb(var(--s500) / .16), transparent 60%); }
+@media (hover: none) { .cursor-glow { display: none; } }
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+  .reveal { opacity: 1; transform: none; }
+}
