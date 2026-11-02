@@ -36,6 +36,6 @@ export const ART = [
 // ✎ Подставь свои ссылки
 export const LINKS = [
   { label: 'GitHub', href: 'https://github.com/XZERON0' },
-  { label: 'Telegram', href: 'https://t.me/@ZER0No' },
+  { label: 'Telegram', href: 'https://t.me/ZER0No' },
   { label: 'Почта', href: 'mailto:zeros71andy@gmail.com' },
 ]
